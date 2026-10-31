@@ -1,0 +1,23 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.4.2
+    container_name: jemdb-benchmark-elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.ml.enabled: "false"
+      ES_JAVA_OPTS: -Xms2g -Xmx2g
+    ports:
+      - "127.0.0.1:9200:9200"
+    mem_limit: 4g
+    cpus: 8.0
+    volumes:
+      - jemdb-benchmark-elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:9200/_cluster/health >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  jemdb-benchmark-elasticsearch-data:
